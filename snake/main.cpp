@@ -17,7 +17,7 @@ int main()
                 window.close();
         }
 
-        // Clear screen
+        // Очистка окна.
         window.clear();
 
         // Update the window
