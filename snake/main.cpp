@@ -55,8 +55,7 @@ int main()
     circle5.setPosition({ 197, 106 }); // Позиция
 
     //Еда
-    CircleShape octagon(80, 8);
-    octagon.setRadius(10);                 //Размер фигуры
+    CircleShape octagon(10, 4);            //Фигура (размер)              
     octagon.setOutlineColor(Color::Black);// Цвет линии обводки фигуры
     octagon.setOutlineThickness(1);      // Толщина линии обводки фигуры
     octagon.setFillColor(Color::Green); // Цвет заливки фигуры
