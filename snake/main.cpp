@@ -11,11 +11,11 @@ int main()
     // Размер игрового окна
     RenderWindow window(VideoMode({ 700, 600 }), "snake"); // Размер игрового окна, и текст игрового окна
 
-    const Texture texture("D:\\Obuchenie\\snake\\snake\\pole.jpg"); // Фоновая картинка игрового поля
+    const Texture texture("pole.jpg"); // Фоновая картинка игрового поля
     Sprite sprite(texture);
 
     // Загрузка музыки
-    Music music("D:\\Obuchenie\\snake\\snake\\snake.ogg");
+    Music music("snake.ogg");
     // Запуск музыки
     music.play();
 
@@ -66,11 +66,11 @@ int main()
     circle5.setPosition({ 180, 105 }); // Позиция
 
     //Еда
-    CircleShape octagon(10, 4);            //Фигура (размер)              
-    octagon.setOutlineColor(Color::Black);// Цвет линии обводки фигуры
-    octagon.setOutlineThickness(1);      // Толщина линии обводки фигуры
-    octagon.setFillColor(Color(17,17,253)); // Цвет заливки фигуры
-    octagon.setPosition({ 240, 106 }); // Позиция
+    CircleShape octagon(10, 4);               //Фигура (размер)              
+    octagon.setOutlineColor(Color::Black);   // Цвет линии обводки фигуры
+    octagon.setOutlineThickness(1);         // Толщина линии обводки фигуры
+    octagon.setFillColor(Color(17,17,253));// Цвет заливки фигуры
+    octagon.setPosition({ 240, 106 });    // Позиция
     
 
 
