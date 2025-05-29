@@ -9,67 +9,79 @@ using namespace std;
 int main()
 {  
     // Размер игрового окна
-    RenderWindow window(VideoMode({ 800, 800 }), "snake");
+    RenderWindow window(VideoMode({ 700, 600 }), "snake"); // Размер игрового окна, и текст игрового окна
 
-    ////Прямоугольник
-    //RectangleShape rectangle;
-    //rectangle.setSize(Vector2f(30, 10)); //Размер
-    //rectangle.setOutlineColor(Color(171, 72, 39)); // Цвет
-    //rectangle.setOutlineThickness(3); // Толщина линии обводки фигуры
-    //rectangle.setFillColor(Color::Red); // Цвет заливки фигуры
-    //rectangle.setPosition({ 30, 40 }); // Позиция
+    const Texture texture("D:\\Obuchenie\\snake\\snake\\pole.jpg"); // Фоновая картинка игрового поля
+    Sprite sprite(texture);
 
+    // Загрузка музыки
+    Music music("D:\\Obuchenie\\snake\\snake\\snake.ogg");
+    // Запуск музыки
+    music.play();
+
+    /*
+    //Прямоугольник
+    RectangleShape rectangle;
+    rectangle.setSize(Vector2f(30, 10));           //Размер
+    rectangle.setOutlineColor(Color(171, 72, 39));//Цвет
+    rectangle.setOutlineThickness(3);            //Толщина линии обводки фигуры
+    rectangle.setFillColor(Color::Red);         //Цвет заливки фигуры
+    rectangle.setPosition({ 30, 40 });         //Позиция
+    */
+
+    
     //Хвост
-    CircleShape circle1(15);                     //Фигура (размер)
+    CircleShape circle1(12);                     //Фигура (размер)
     circle1.setOutlineColor(Color(171, 72, 39));// Цвет линии обводки фигуры
     circle1.setOutlineThickness(5);            // Толщина линии обводки фигуры
     circle1.setFillColor(Color::Red);         // Цвет заливки фигуры
     circle1.setPosition({ 100, 100 });       // Позиция
 
     //Тело
-    CircleShape circle2(15);                     //Фигура (размер)
+    CircleShape circle2(12);                     //Фигура (размер)
     circle2.setOutlineColor(Color(171, 72, 39));// Цвет линии обводки фигуры
     circle2.setOutlineThickness(5);            // Толщина линии обводки фигуры
     circle2.setFillColor(Color::Red);         // Цвет заливки фигуры
-    circle2.setPosition({ 140, 100 });       // Позиция
+    circle2.setPosition({ 133, 100 });       // Позиция
 
     //Голова
-    CircleShape circle3(15);                     //Фигура (размер)
+    CircleShape circle3(12);                     //Фигура (размер)
     circle3.setOutlineColor(Color(171, 72, 39));// Цвет линии обводки фигуры
     circle3.setOutlineThickness(5);            // Толщина линии обводки фигуры
     circle3.setFillColor(Color::Red);         // Цвет заливки фигуры
-    circle3.setPosition({ 180, 100 });       // Позиция
+    circle3.setPosition({ 167, 100 });       // Позиция
 
     //Верхний глаз
-    CircleShape circle4(3);                //Фигура (размер)
+    CircleShape circle4(2);                //Фигура (размер)
     circle4.setOutlineColor(Color::Black);// Цвет линии обводки фигуры
     circle4.setOutlineThickness(1);      // Толщина линии обводки фигуры
     circle4.setFillColor(Color::Black); // Цвет заливки фигуры
-    circle4.setPosition({ 197, 118 }); // Позиция
+    circle4.setPosition({ 180, 115 }); // Позиция
 
     //Нижний глаз
-    CircleShape circle5(3);                //Фигура (размер)
+    CircleShape circle5(2);                //Фигура (размер)
     circle5.setOutlineColor(Color::Black);// Цвет линии обводки фигуры
     circle5.setOutlineThickness(1);      // Толщина линии обводки фигуры
     circle5.setFillColor(Color::Black); // Цвет заливки фигуры
-    circle5.setPosition({ 197, 106 }); // Позиция
+    circle5.setPosition({ 180, 105 }); // Позиция
 
     //Еда
     CircleShape octagon(10, 4);            //Фигура (размер)              
     octagon.setOutlineColor(Color::Black);// Цвет линии обводки фигуры
     octagon.setOutlineThickness(1);      // Толщина линии обводки фигуры
-    octagon.setFillColor(Color::Green); // Цвет заливки фигуры
-    octagon.setPosition({ 240, 105 }); // Позиция
+    octagon.setFillColor(Color(17,17,253)); // Цвет заливки фигуры
+    octagon.setPosition({ 240, 106 }); // Позиция
+    
 
 
-    // Старт игрового окна
+    // Начать игровой цикл
     while (window.isOpen())
     {
         
-        // Process events
+        // События процесса
         while (const optional event = window.pollEvent())
         {
-            // Close window: exit
+            // Закрыть окно: выход
             if (event->is<Event::Closed>())
                 window.close();
         }
@@ -79,14 +91,17 @@ int main()
         window.clear(Color::Cyan);
         
         //Рисуем фигуры с заданными параметрами.
+        window.draw(sprite);
+
         window.draw(circle1);
         window.draw(circle2);
         window.draw(circle3);
         window.draw(circle4);
         window.draw(circle5);
+        
         window.draw(octagon);
 
-        // Update the window
+        // Обновить окно
         window.display();
     }
 
