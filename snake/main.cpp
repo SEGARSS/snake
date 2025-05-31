@@ -29,7 +29,7 @@ int main()
 
     //--------------------------------------------------------------------------------------------------------
     
-    //Вариант змейки с картинки
+    //Вариант змейки с картинки.
     
     //Змея (голова)
     //Image snake;
@@ -143,10 +143,6 @@ int main()
 				Vector2f pos = body.getPosition();
 				body.setPosition({ pos.x + 1, pos.y });
 			}
-
-
-
-
 
 			window.draw(snakeBody[snakeBody.size() - 1]);
 			Vector2f pos = snakeBody[snakeBody.size() - 1].getPosition();
