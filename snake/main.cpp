@@ -127,6 +127,10 @@ int main()
 				window.close();
 		}
 
+        //Сдесь сделать тик в 1 сек и появление доп шарика.
+
+
+
 		if (clock.getElapsedTime() > Time(tick)) 
         {
 			clock.restart();
