@@ -89,14 +89,16 @@ int main()
     snakeBody.push_back(getSnakeBodyTile(2, 1));
     snakeBody.push_back(getSnakeBodyTile(3, 1));
 
-    vector<CircleShape> glaz; //Глаза
+    CircleShape glaz_left;  //Глаз левый
+    CircleShape glaz_right;//Глаз правый
 
-    glaz.push_back(getSnakeGlasisTile(122, 24));
-    glaz.push_back(getSnakeGlasisTile(122, 14));
+    glaz_left = getSnakeGlasisTile(122, 24);
+    glaz_right = getSnakeGlasisTile(122, 14);
 
     Direction direction = Direction::right; // Начальная позиция змеи
 
-    CircleShape food(getSnakeBodyTile(5, 6));
+    CircleShape food; // Будущая еда
+    food = getSnakeBodyTile(6, 5);
 
     //----------------------------------------------------------------------------------------------------------
 
@@ -189,27 +191,26 @@ int main()
             window.draw(snakeBody[i]);
         }
 
-        //Глаза - пытаюсь сделать привязку... Невыходит))
-        for (int i = 0; i < snakeBody.size() - 1; i++)
-        {
-            Vector2f pos = snakeBody[snakeBody.size() - 1].getPosition();
-            glaz[i].setPosition(pos);
-        }
+        ////Глаза - пытаюсь сделать привязку... Невыходит))
+        //for (int i = 0; i < snakeBody.size() - 1; i++)
+        //{
+        //    Vector2f pos = snakeBody[snakeBody.size() - 1].getPosition();
+        //    glaz[i].setPosition(pos);
+        //}
 
-        //Рисуем глаза змеи
-        for (int i = 0; i < glaz.size(); ++i)
-        {
-            window.draw(glaz[i]);
-        }
+        ////Рисуем глаза змеи
+        //for (int i = 0; i < glaz.size(); ++i)
+        //{
+        //    window.draw(glaz[i]);
+        //}
 
-        //Vector2f pos = snakeBody[snakeBody.size() - 1].getPosition();
-        ////Верхний глаз
-        //CircleShape glaz(2);                //Фигура (размер)
-        //glaz.setPosition({ pos.x + 13 , pos.y + 15 }); // Позиция
-        //window.draw(glaz);
-        ////Нижний глаз
-        //glaz.setPosition({ pos.x + 13 , pos.y + 5 }); // Позиция
-        //window.draw(glaz);
+        Vector2f pos = snakeBody[snakeBody.size() - 1].getPosition();
+        //Верхний глаз               
+        glaz_left.setPosition({ pos.x + 13 , pos.y + 15 }); // Позиция
+        window.draw(glaz_left);
+        //Нижний глаз
+        glaz_right.setPosition({ pos.x + 13 , pos.y + 5 }); // Позиция
+        window.draw(glaz_right);
         
         window.draw(food);
 
