@@ -155,7 +155,7 @@ int main()
             }
 
 
-            //Глаза - пытаюсь сделать привязку...
+            //Глаза - пытаюсь сделать привязку... Невыходит))
             for (int i = 0; i < snakeBody.size() - 1; i++)
             {
                 Vector2f pos = snakeBody[i].getPosition();
@@ -206,7 +206,7 @@ int main()
             window.draw(glaz[i]);
         }
 
-        window.draw(food);
+        window.draw(food); // Не выводит, почему ?
 
         // Обновить окно
         window.display();
