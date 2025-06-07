@@ -152,16 +152,7 @@ int main()
                 Vector2f pos = snakeBody[i + 1].getPosition();//Здесь запросили позицию следующу
                 snakeBody[i].setPosition(pos); //Сюда её положили (указали)
                 snakeBody[i].setPosition(pos); // Попробовать закоментить
-            }
-
-
-            //Глаза - пытаюсь сделать привязку... Невыходит))
-            for (int i = 0; i < snakeBody.size() - 1; i++)
-            {
-                Vector2f pos = snakeBody[i].getPosition();
-                glaz[i].setPosition(pos);
-            }  
-                     
+            }                    
 
             //логика движения головы змеи
             //считали позицию головы змеи в pos
@@ -185,7 +176,7 @@ int main()
             {
                 pos.x += SIZE_CELL;
             }
-            snakeBody[snakeBody.size() - 1].setPosition(pos);
+            snakeBody[snakeBody.size() - 1].setPosition(pos);            
         }
 
         // Очистка окна.
@@ -193,6 +184,13 @@ int main()
 
         //Рисуем фигуры с заданными параметрами.
         window.draw(backgroud);
+
+		//Глаза - пытаюсь сделать привязку... Невыходит))
+		for (int i = 0; i < snakeBody.size() - 1; i++)
+		{
+			Vector2f pos = snakeBody[snakeBody.size() - 1].getPosition();
+            glaz[i].setPosition(pos);
+		}
 
         //Рисуем тело змеи
         for (int i = 0; i < snakeBody.size(); ++i) 
