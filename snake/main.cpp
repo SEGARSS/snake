@@ -11,7 +11,43 @@ using namespace std;
 const int SIZE_CELL = 50; // Размер одной ячейки в пикселях
 const Color BODY_COLOR(171, 72, 39); // Цвет линии обводки фигуры
 
-//--------------------------------------------------------------------------------------------------------------------------------------
+
+//помогает не дублировать код
+//-------------------------------------------------------------------------------------------------------
+CircleShape getSnakeBodyTile(float x, float y)//функция генерирует кружок, и устанавливает все необходимые параметры
+{
+    CircleShape body;
+
+    body.setRadius(12);               // Радиус
+    body.setOutlineColor(BODY_COLOR);// Цвет линии обводки фигуры
+    body.setOutlineThickness(5);    // Толщина линии обводки фигуры
+    body.setFillColor(Color::Red); // Цвет заливки фигуры
+    body.setPosition({ x * SIZE_CELL + 12, y * SIZE_CELL + 12 });// Позиция // +12 потому что это радиус нашего кружка    
+
+    return body;
+}
+//-------------------------------------------------------------------------------------------------------
+CircleShape getSnakeGlasisTile(float x, float y)
+{
+    CircleShape glasis;
+
+    glasis.setRadius(2);                 //Фигура (размер)
+    glasis.setOutlineColor(Color::Black);// Цвет линии обводки фигуры
+    glasis.setOutlineThickness(1);      // Толщина линии обводки фигуры
+    glasis.setFillColor(Color::Black); // Цвет заливки фигуры
+    glasis.setPosition({ x + SIZE_CELL + 2, y + SIZE_CELL + 2 }); // Позиция
+
+    return glasis;
+}
+//-------------------------------------------------------------------------------------------------------
+enum class Direction//перечисление, хранит варианты направления движения
+{
+    up,
+    down,
+    left,
+    right
+};
+//-------------------------------------------------------------------------------------------------------
 int main()
 {  
     // Размер игрового окна
@@ -24,8 +60,10 @@ int main()
     Sprite backgroud(texture);
 
     // Загрузка музыки
+    /*
     Music music("decoration\\music\\snake.ogg");
     music.play();
+    */
 
     //--------------------------------------------------------------------------------------------------------
     
@@ -45,73 +83,26 @@ int main()
 
     //Вариант змейки с фигур
 
-    vector<CircleShape> snakeBody;
+    vector<CircleShape> snakeBody; //Змея вся
 
-    CircleShape bodyTile(12); //шаблон
-    bodyTile.setRadius(12);
-    bodyTile.setOutlineColor(BODY_COLOR); // Цвет линии обводки фигуры
-    bodyTile.setOutlineThickness(5);     // Толщина линии обводки фигуры
-    bodyTile.setFillColor(Color::Red);  // Цвет заливки фигуры
+    snakeBody.push_back(getSnakeBodyTile(1, 1));// Кординаты 1 - это по Х, следом 1 по Y.
+    snakeBody.push_back(getSnakeBodyTile(2, 1));
+    snakeBody.push_back(getSnakeBodyTile(3, 1));
 
-    bodyTile.setPosition({ 1 * SIZE_CELL + 12, 1 * SIZE_CELL + 12 });
-    snakeBody.push_back(bodyTile); //копия идет в вектор
-    bodyTile.setPosition({ 2 * SIZE_CELL + 12, 1 * SIZE_CELL + 12 });
-    snakeBody.push_back(bodyTile);
-    bodyTile.setPosition({ 3 * SIZE_CELL + 12, 1 * SIZE_CELL + 12 });
-    snakeBody.push_back(bodyTile);
+    vector<CircleShape> glaz; //Глаза
 
-    //snakeBody.push_back(CircleShape());
-    //snakeBody[0].setRadius(12);
-    //snakeBody[0].setOutlineColor(BODY_COLOR);// Цвет линии обводки фигуры
-    //snakeBody[0].setOutlineThickness(5);            // Толщина линии обводки фигуры
-    //snakeBody[0].setFillColor(Color::Red);         // Цвет заливки фигуры
-    //snakeBody[0].setPosition({ 1 * SIZE_CELL + 12, 1 * SIZE_CELL + 12 });       // Позиция
+    glaz.push_back(getSnakeGlasisTile(122, 24));
+    glaz.push_back(getSnakeGlasisTile(122, 14));
 
+    Direction direction = Direction::right; // Начальная позиция змеи
+
+    CircleShape food;
+    food.setPosition(Vector2f(5, 6));
     
 
-    //-----------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------
 
-    /*
-    //Прямоугольник
-    RectangleShape rectangle;
-    rectangle.setSize(Vector2f(30, 10));           //Размер
-    rectangle.setOutlineColor(Color(171, 72, 39));//Цвет
-    rectangle.setOutlineThickness(3);            //Толщина линии обводки фигуры
-    rectangle.setFillColor(Color::Red);         //Цвет заливки фигуры
-    rectangle.setPosition({ 30, 40 });         //Позиция
-    */
-
-    /*
-    //Хвост
-    CircleShape circle1(12);                     //Фигура (размер)
-    circle1.setOutlineColor(Color(171, 72, 39));// Цвет линии обводки фигуры
-    circle1.setOutlineThickness(5);            // Толщина линии обводки фигуры
-    circle1.setFillColor(Color::Red);         // Цвет заливки фигуры
-    circle1.setPosition({ 100, 100 });       // Позиция
-    //Тело
-    CircleShape circle2(12);                     //Фигура (размер)
-    circle2.setOutlineColor(Color(171, 72, 39));// Цвет линии обводки фигуры
-    circle2.setOutlineThickness(5);            // Толщина линии обводки фигуры
-    circle2.setFillColor(Color::Red);         // Цвет заливки фигуры
-    circle2.setPosition({ 133, 100 });       // Позиция
-    //Голова
-    CircleShape circle3(12);                     //Фигура (размер)
-    circle3.setOutlineColor(Color(171, 72, 39));// Цвет линии обводки фигуры
-    circle3.setOutlineThickness(5);            // Толщина линии обводки фигуры
-    circle3.setFillColor(Color::Red);         // Цвет заливки фигуры
-    circle3.setPosition({ 167, 100 });       // Позиция
-
-    //Еда
-    CircleShape octagon(10, 4);               //Фигура (размер)               
-    octagon.setOutlineColor(Color::Black);   // Цвет линии обводки фигуры
-    octagon.setOutlineThickness(1);         // Толщина линии обводки фигуры
-    octagon.setFillColor(Color(17,17,253));// Цвет заливки фигуры
-    octagon.setPosition({ 240, 106 });    // Позиция
-    */
-
-    //-----------------------------------------------------------------------------------------------------------
-
-	chrono::milliseconds tick(50);
+	chrono::milliseconds tick(1000);
 
 	Clock clock;
 
@@ -125,56 +116,101 @@ int main()
 			// Закрыть окно: выход
 			if (event->is<Event::Closed>())
 				window.close();
+
+            //Нажатие клавишь
+            if (event->is<Event::KeyPressed>())
+            {
+                if (Keyboard::isKeyPressed(sf::Keyboard::Key::Down) || Keyboard::isKeyPressed(sf::Keyboard::Key::S))
+                {
+                    direction = Direction::down;
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right) || Keyboard::isKeyPressed(sf::Keyboard::Key::D))
+                {
+                    direction = Direction::right;
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left) || Keyboard::isKeyPressed(sf::Keyboard::Key::A))
+                {
+                    direction = Direction::left;
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up) || Keyboard::isKeyPressed(sf::Keyboard::Key::W))
+                {
+                    direction = Direction::up;
+                }
+            }
+            
 		}
 
-        //Сдесь сделать тик в 1 сек и появление доп шарика.
-
-
-
-		if (clock.getElapsedTime() > Time(tick)) 
+        if (clock.getElapsedTime() > Time(tick))
         {
-			clock.restart();
+            clock.restart();
 
-			// Очистка окна.
-			window.clear(Color::Cyan);
+            //цикл двигает все кроме головы
+            // snakeBody.size() - 1 потому что логика на голову змеи у нас другая
+            for (int i = 0; i < snakeBody.size() - 1; i++)
+            {
+                //считали позицию следующего кружка в pos
+                Vector2f pos = snakeBody[i + 1].getPosition();//Здесь запросили позицию следующу
+                snakeBody[i].setPosition(pos); //Сюда её положили (указали)
+                snakeBody[i].setPosition(pos); // Попробовать закоментить
+            }
 
-			//Рисуем фигуры с заданными параметрами.
-			window.draw(backgroud);
 
-			for (int i = 0; i < snakeBody.size(); ++i)
-			{
-				CircleShape& body = snakeBody[i];
-				Vector2f pos = body.getPosition();
-				body.setPosition({ pos.x + 1, pos.y });
-			}
+            //Глаза - пытаюсь сделать привязку...
+            for (int i = 0; i < snakeBody.size() - 1; i++)
+            {
+                Vector2f pos = snakeBody[i].getPosition();
+                glaz[i].setPosition(pos);
+            }  
+                     
 
-			window.draw(snakeBody[snakeBody.size() - 1]);
-			Vector2f pos = snakeBody[snakeBody.size() - 1].getPosition();
+            //логика движения головы змеи
+            //считали позицию головы змеи в pos
+            //голова змеи это последний элемент вектора
+            //индекс snakeBody.size() - 1
+            Vector2f pos = snakeBody[snakeBody.size() - 1].getPosition();
+            //установили позицию текущего кружка увеличив х на 50
+            if (direction == Direction::up)
+            {
+                pos.y -= SIZE_CELL;
+            }            
+            if (direction == Direction::down) 
+            {
+                pos.y += SIZE_CELL;
+            }
+            if (direction == Direction::left)
+            {
+                pos.x -= SIZE_CELL;
+            }
+            if (direction == Direction::right)
+            {
+                pos.x += SIZE_CELL;
+            }
+            snakeBody[snakeBody.size() - 1].setPosition(pos);
+        }
 
-			//Верхний глаз
-			CircleShape circle4(2);                //Фигура (размер)
-			circle4.setOutlineColor(Color::Black);// Цвет линии обводки фигуры
-			circle4.setOutlineThickness(1);      // Толщина линии обводки фигуры
-			circle4.setFillColor(Color::Black); // Цвет заливки фигуры
-			circle4.setPosition({ pos.x + 13 , pos.y + 15 }); // Позиция
-			//Нижний глаз
-			CircleShape circle5(2);                //Фигура (размер)
-			circle5.setOutlineColor(Color::Black);// Цвет линии обводки фигуры
-			circle5.setOutlineThickness(1);      // Толщина линии обводки фигуры
-			circle5.setFillColor(Color::Black); // Цвет заливки фигуры
-			circle5.setPosition({ pos.x + 13 , pos.y + 5 }); // Позиция
+        // Очистка окна.
+        window.clear(Color::Cyan);
 
-			window.draw(circle4);
-			window.draw(circle5);
+        //Рисуем фигуры с заданными параметрами.
+        window.draw(backgroud);
 
-			for (int i = 0; i < snakeBody.size() - 1; ++i)
-			{
-				window.draw(snakeBody[i]);
-			}
+        //Рисуем тело змеи
+        for (int i = 0; i < snakeBody.size(); ++i) 
+        {
+            window.draw(snakeBody[i]);
+        }
 
-			// Обновить окно
-			window.display();
-		}
+        //Рисуем глаза змеи
+        for (int i = 0; i < glaz.size(); ++i)
+        {
+            window.draw(glaz[i]);
+        }
+
+        window.draw(food);
+
+        // Обновить окно
+        window.display();
+
 	}
 
     return 0;
