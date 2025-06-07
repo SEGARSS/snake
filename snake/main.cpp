@@ -96,9 +96,7 @@ int main()
 
     Direction direction = Direction::right; // Начальная позиция змеи
 
-    CircleShape food;
-    food.setPosition(Vector2f(5, 6));
-    
+    CircleShape food(getSnakeBodyTile(5, 6));
 
     //----------------------------------------------------------------------------------------------------------
 
@@ -184,18 +182,18 @@ int main()
 
         //Рисуем фигуры с заданными параметрами.
         window.draw(backgroud);
-
-		//Глаза - пытаюсь сделать привязку... Невыходит))
-		for (int i = 0; i < snakeBody.size() - 1; i++)
-		{
-			Vector2f pos = snakeBody[snakeBody.size() - 1].getPosition();
-            glaz[i].setPosition(pos);
-		}
-
+        
         //Рисуем тело змеи
         for (int i = 0; i < snakeBody.size(); ++i) 
         {
             window.draw(snakeBody[i]);
+        }
+
+        //Глаза - пытаюсь сделать привязку... Невыходит))
+        for (int i = 0; i < snakeBody.size() - 1; i++)
+        {
+            Vector2f pos = snakeBody[snakeBody.size() - 1].getPosition();
+            glaz[i].setPosition(pos);
         }
 
         //Рисуем глаза змеи
@@ -204,7 +202,16 @@ int main()
             window.draw(glaz[i]);
         }
 
-        window.draw(food); // Не выводит, почему ?
+        //Vector2f pos = snakeBody[snakeBody.size() - 1].getPosition();
+        ////Верхний глаз
+        //CircleShape glaz(2);                //Фигура (размер)
+        //glaz.setPosition({ pos.x + 13 , pos.y + 15 }); // Позиция
+        //window.draw(glaz);
+        ////Нижний глаз
+        //glaz.setPosition({ pos.x + 13 , pos.y + 5 }); // Позиция
+        //window.draw(glaz);
+        
+        window.draw(food);
 
         // Обновить окно
         window.display();
