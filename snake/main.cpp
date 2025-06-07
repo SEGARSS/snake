@@ -84,21 +84,19 @@ int main()
     //Вариант змейки с фигур
 
     vector<CircleShape> snakeBody; //Змея вся
-
     snakeBody.push_back(getSnakeBodyTile(1, 1));// Кординаты 1 - это по Х, следом 1 по Y.
     snakeBody.push_back(getSnakeBodyTile(2, 1));
     snakeBody.push_back(getSnakeBodyTile(3, 1));
 
     CircleShape glaz_left;  //Глаз левый
     CircleShape glaz_right;//Глаз правый
-
     glaz_left = getSnakeGlasisTile(122, 24);
     glaz_right = getSnakeGlasisTile(122, 14);
 
-    Direction direction = Direction::right; // Начальная позиция змеи
-
     CircleShape food; // Будущая еда
     food = getSnakeBodyTile(6, 5);
+
+    Direction direction = Direction::right; // Начальная позиция змеи    
 
     //----------------------------------------------------------------------------------------------------------
 
@@ -191,19 +189,7 @@ int main()
             window.draw(snakeBody[i]);
         }
 
-        ////Глаза - пытаюсь сделать привязку... Невыходит))
-        //for (int i = 0; i < snakeBody.size() - 1; i++)
-        //{
-        //    Vector2f pos = snakeBody[snakeBody.size() - 1].getPosition();
-        //    glaz[i].setPosition(pos);
-        //}
-
-        ////Рисуем глаза змеи
-        //for (int i = 0; i < glaz.size(); ++i)
-        //{
-        //    window.draw(glaz[i]);
-        //}
-
+        //Привязка глаз к голове
         Vector2f pos = snakeBody[snakeBody.size() - 1].getPosition();
         //Верхний глаз               
         glaz_left.setPosition({ pos.x + 13 , pos.y + 15 }); // Позиция
