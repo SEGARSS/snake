@@ -1,5 +1,6 @@
 ﻿#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
+#include <random>
 
 #include <vector>
 #include <iostream>
@@ -8,10 +9,24 @@
 using namespace sf;
 using namespace std;
 
-const int SIZE_CELL = 50; // Размер одной ячейки в пикселях
+const float SIZE_CELL = 50; // Размер одной ячейки в пикселях
 const Color BODY_COLOR(171, 72, 39); // Цвет линии обводки фигуры
+const Color FOOD_COLOR(0, 177, 0); // Цвет линии обводки фигуры
 
+//еда
+//-------------------------------------------------------------------------------------------------------
+CircleShape getSnakeFoodTile(float x, float y)//функция генерирует кружок, и устанавливает все необходимые параметры
+{
+    CircleShape body;
 
+    body.setRadius(12);               // Радиус
+    body.setOutlineColor(FOOD_COLOR);// Цвет линии обводки фигуры
+    body.setOutlineThickness(5);    // Толщина линии обводки фигуры
+    body.setFillColor(Color::Green); // Цвет заливки фигуры
+    body.setPosition({ x * SIZE_CELL + 12, y * SIZE_CELL + 12 });// Позиция // +12 потому что это радиус нашего кружка    
+
+    return body;
+}
 //помогает не дублировать код
 //-------------------------------------------------------------------------------------------------------
 CircleShape getSnakeBodyTile(float x, float y)//функция генерирует кружок, и устанавливает все необходимые параметры
@@ -35,7 +50,7 @@ CircleShape getSnakeGlasisTile(float x, float y)
     glasis.setOutlineColor(Color::Black);// Цвет линии обводки фигуры
     glasis.setOutlineThickness(1);      // Толщина линии обводки фигуры
     glasis.setFillColor(Color::Black); // Цвет заливки фигуры
-    glasis.setPosition({ x + SIZE_CELL + 2, y + SIZE_CELL + 2 }); // Позиция
+    glasis.setPosition({ x * SIZE_CELL + 2, y * SIZE_CELL + 2 }); // Позиция
 
     return glasis;
 }
@@ -50,6 +65,13 @@ enum class Direction//перечисление, хранит варианты н
 //-------------------------------------------------------------------------------------------------------
 int main()
 {  
+    // для генерации случайных чисел
+    //пока не заморачивайся, просто прими как факт, что это нужные строки
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> distrib(1, 10);// сам генератора случайного числа (генерирует число от 1 до 10)
+    //используем для генерации случайных координат для еды
+    
     // Размер игрового окна
     RenderWindow window(VideoMode({ 700, 600 }), "snake"); // Размер игрового окна, и текст игрового окна
 
@@ -88,26 +110,32 @@ int main()
     snakeBody.push_back(getSnakeBodyTile(2, 1));
     snakeBody.push_back(getSnakeBodyTile(3, 1));
 
-    CircleShape glaz_left;  //Глаз левый
-    CircleShape glaz_right;//Глаз правый
-    glaz_left = getSnakeGlasisTile(122, 24);
-    glaz_right = getSnakeGlasisTile(122, 14);
+    CircleShape glaz_left = getSnakeGlasisTile(122, 24);;  //Глаз левый
+    CircleShape glaz_right = getSnakeGlasisTile(122, 14);;//Глаз правый
 
-    CircleShape food; // Будущая еда
-    food = getSnakeBodyTile(6, 5);
+    CircleShape food = getSnakeFoodTile(6, 5);; // Будущая еда
 
     Direction direction = Direction::right; // Начальная позиция змеи    
 
+    int ochki = 0;
+
     //----------------------------------------------------------------------------------------------------------
 
-	chrono::milliseconds tick(1000);
+	chrono::milliseconds tick(500);
 
 	Clock clock;
 
+    //Надпись с очками игрока
+    const Font font("ARIAL.TTF");
+
+    Text text(font, L"Очки 0"); //L - чтоб были русские буквы вместо крякозябры.
+    text.setCharacterSize(30); //Размер текста
+    text.setStyle(Text::Bold);//Стиль текста
+    text.setFillColor(Color::Red);//Цвет текста
+
 	// Начать игровой цикл
 	while (window.isOpen())
-	{
-
+	{        
 		// События процесса
 		while (const std::optional event = window.pollEvent())
 		{
@@ -149,14 +177,14 @@ int main()
                 //считали позицию следующего кружка в pos
                 Vector2f pos = snakeBody[i + 1].getPosition();//Здесь запросили позицию следующу
                 snakeBody[i].setPosition(pos); //Сюда её положили (указали)
-                snakeBody[i].setPosition(pos); // Попробовать закоментить
             }                    
 
             //логика движения головы змеи
             //считали позицию головы змеи в pos
             //голова змеи это последний элемент вектора
             //индекс snakeBody.size() - 1
-            Vector2f pos = snakeBody[snakeBody.size() - 1].getPosition();
+            // snakeBody[snakeBody.size() - 1] - равнозначно - snakeBody.back()
+            Vector2f pos = snakeBody.back().getPosition();
             //установили позицию текущего кружка увеличив х на 50
             if (direction == Direction::up)
             {
@@ -174,7 +202,14 @@ int main()
             {
                 pos.x += SIZE_CELL;
             }
-            snakeBody[snakeBody.size() - 1].setPosition(pos);            
+            snakeBody.back().setPosition(pos);
+        }
+
+        //Проверка, что позиция еды совподает с позицией головы
+        if (food.getPosition() == snakeBody.back().getPosition())
+        {
+            ochki++;//увеличиваем очки
+            food.setPosition({ (distrib(gen) * SIZE_CELL) + 12, (distrib(gen) * SIZE_CELL) + 12});
         }
 
         // Очистка окна.
@@ -182,6 +217,10 @@ int main()
 
         //Рисуем фигуры с заданными параметрами.
         window.draw(backgroud);
+
+        //Рисуем вывод очков на доске
+        text.setString(L"очки " + std::to_string(ochki));//Конвертируем int в string.(to_string)
+        window.draw(text);
         
         //Рисуем тело змеи
         for (int i = 0; i < snakeBody.size(); ++i) 
@@ -190,7 +229,7 @@ int main()
         }
 
         //Привязка глаз к голове
-        Vector2f pos = snakeBody[snakeBody.size() - 1].getPosition();
+        Vector2f pos = snakeBody.back().getPosition();
         //Верхний глаз               
         glaz_left.setPosition({ pos.x + 13 , pos.y + 15 }); // Позиция
         window.draw(glaz_left);
@@ -202,9 +241,7 @@ int main()
 
         // Обновить окно
         window.display();
-
 	}
-
     return 0;
 }
 //--------------------------------------------------------------------------------------------------------------------------------------
