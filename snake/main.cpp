@@ -157,23 +157,31 @@ int main()
             {
                 if (Keyboard::isKeyPressed(sf::Keyboard::Key::Down) || Keyboard::isKeyPressed(sf::Keyboard::Key::S))
                 {
-                    direction = Direction::down;
-                }
-                else 
-                {
-                    direction != Direction::up;
+                    if (direction != Direction::up)
+                    {
+                        direction = Direction::down;
+                    }
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right) || Keyboard::isKeyPressed(sf::Keyboard::Key::D))
                 {
-                    direction = Direction::right;
+                    if (direction != Direction::left)
+                    {
+                        direction = Direction::right;
+                    }                    
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left) || Keyboard::isKeyPressed(sf::Keyboard::Key::A))
                 {
-                    direction = Direction::left;
+                    if (direction != Direction::right)
+                    {
+                        direction = Direction::left;
+                    }                    
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up) || Keyboard::isKeyPressed(sf::Keyboard::Key::W))
                 {
-                    direction = Direction::up;
+                    if (direction != Direction::down)
+                    {
+                        direction = Direction::up;
+                    }
                 }
             }
             
@@ -203,7 +211,7 @@ int main()
             {
                 pos.y -= SIZE_CELL;
             }
-            if (direction == Direction::down) 
+            if (direction == Direction::down)
             {
                 pos.y += SIZE_CELL;
             }
@@ -221,7 +229,7 @@ int main()
         //Проверка, что позиция еды совподает с позицией головы
         if (food.getPosition() == snakeBody.back().getPosition())
         {
-            gameEnd = true;                
+            //gameEnd = true;                
             
             ochki++; //увеличиваем очки
             //перемещаем еду на случайную пазицию
