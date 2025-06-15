@@ -113,11 +113,13 @@ int main()
     CircleShape glaz_left = getSnakeGlasisTile(122, 24);;  //Глаз левый
     CircleShape glaz_right = getSnakeGlasisTile(122, 14);;//Глаз правый
 
-    CircleShape food = getSnakeFoodTile(6, 5);; // Будущая еда
+    CircleShape food = getSnakeFoodTile(6, 5); // Будущая еда
 
     Direction direction = Direction::right; // Начальная позиция змеи    
 
     int ochki = 0;
+    // ДОБАВИЛИ условная переменная для отслеживания конца игры
+    bool gameEnd = false;
 
     //----------------------------------------------------------------------------------------------------------
 
@@ -132,6 +134,13 @@ int main()
     text.setCharacterSize(30); //Размер текста
     text.setStyle(Text::Bold);//Стиль текста
     text.setFillColor(Color::Red);//Цвет текста
+
+    
+    Text gameOver(font, L"gameOver"); //L - чтоб были русские буквы вместо крякозябры.
+    gameOver.setCharacterSize(60); //Размер текста
+    gameOver.setStyle(Text::Bold);//Стиль текста
+    gameOver.setFillColor(Color::Black);//Цвет текста
+    gameOver.setPosition(sf::Vector2f(250.0f - 60, 300.0f - 60));
 
 	// Начать игровой цикл
 	while (window.isOpen())
@@ -150,6 +159,10 @@ int main()
                 {
                     direction = Direction::down;
                 }
+                else 
+                {
+                    direction != Direction::up;
+                }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right) || Keyboard::isKeyPressed(sf::Keyboard::Key::D))
                 {
                     direction = Direction::right;
@@ -166,7 +179,7 @@ int main()
             
 		}
 
-        if (clock.getElapsedTime() > Time(tick))
+        if (clock.getElapsedTime() > Time(tick) && gameEnd == false)
         {
             clock.restart();
 
@@ -189,7 +202,7 @@ int main()
             if (direction == Direction::up)
             {
                 pos.y -= SIZE_CELL;
-            }            
+            }
             if (direction == Direction::down) 
             {
                 pos.y += SIZE_CELL;
@@ -208,8 +221,32 @@ int main()
         //Проверка, что позиция еды совподает с позицией головы
         if (food.getPosition() == snakeBody.back().getPosition())
         {
-            ochki++;//увеличиваем очки
+            gameEnd = true;                
+            
+            ochki++; //увеличиваем очки
+            //перемещаем еду на случайную пазицию
+            //distrib(gen) - генерирует случайное число
             food.setPosition({ (distrib(gen) * SIZE_CELL) + 12, (distrib(gen) * SIZE_CELL) + 12});
+
+            // ДОБАВИЛИ теперь змея растет когда "ест" еду, т.е. сталкивается с едой
+            // новые функции вектора
+            /* 
+            front() - дает доступ к самому первому элементу в векторе(работает так же как back(), 
+            который дает доступ к последнему элементу вектора)
+            insert(позиция, значение) - вставляет значение на позицию в векторе, 
+            в примере вставляется в начало вектора значение первого элемента вектора)
+            begin() - итератор (указатель) на первый элемент вектора, 
+            нужен т.к. insert принимает именно итератор, куда нужно вставить элемент
+            1 вариант добавления - дублируем первый элемент, из-за чего у нас две последних секции наслаиваются, 
+            пока не сдвинется змейка.
+            */
+            snakeBody.insert(snakeBody.begin(), snakeBody.front());
+            //2 вариант - сохранить позицию первой секции до ее передвижения в starPoz, добавить новую секцию в вектор с позицией 0 0, а потом установить этой секции позицию starPoz
+            //snakeBody.insert(snakeBody.begin(), getSnakeBodyTile(0, 0));
+            //snakeBody.front().setPosition(starPoz);
+            //добавляли сначала для отладки, чтобы понять как добавляются элементы
+            //тут получили багу - змейка телепортируется в начало поля, м б потом используем как игровой элемент
+            //snakeBody.push_back(getSnakeBodyTile(1,1));
         }
 
         // Очистка окна.
@@ -217,16 +254,21 @@ int main()
 
         //Рисуем фигуры с заданными параметрами.
         window.draw(backgroud);
+               
 
         //Рисуем вывод очков на доске
         text.setString(L"очки " + std::to_string(ochki));//Конвертируем int в string.(to_string)
         window.draw(text);
+
+
         
         //Рисуем тело змеи
         for (int i = 0; i < snakeBody.size(); ++i) 
         {
             window.draw(snakeBody[i]);
         }
+
+
 
         //Привязка глаз к голове
         Vector2f pos = snakeBody.back().getPosition();
@@ -238,6 +280,11 @@ int main()
         window.draw(glaz_right);
         
         window.draw(food);
+
+        if (gameEnd)
+        {
+            window.draw(gameOver);
+        }
 
         // Обновить окно
         window.display();
