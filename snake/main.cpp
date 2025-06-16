@@ -226,7 +226,7 @@ int main()
             snakeBody.back().setPosition(pos);
         }
 
-        Vector2f pos2 = food.getPosition();
+        
 
         //дорабоать
         if (Vector2f(6.0 + 50 + 12, 6.0 + 50 + 12) == snakeBody.back().getPosition())
