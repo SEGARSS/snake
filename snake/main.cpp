@@ -136,6 +136,7 @@ int main()
 	text.setStyle(Text::Bold);//Стиль текста
 	text.setFillColor(Color::Red);//Цвет текста
 
+
 	Text gameOverText(font, L"Ты лузер, проиграл!"); //L - чтоб были русские буквы вместо крякозябры.
 	gameOverText.setCharacterSize(60); //Размер текста
 	gameOverText.setStyle(Text::Bold);//Стиль текста
